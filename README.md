@@ -18,11 +18,11 @@ You usually have two options to do it, via SSH or via HTTPS, either one is fine.
 You can find those two URLs by pressing the code dropdown on the main page or the repository.
 Note: Monash Gitlab only allows you to use SSH, so skip the HTTPS part.
 
-If you use HTTPS, it will usually authenticate by asking you to log in.
-The HTTPS URL will look like this: https://git.infotech.monash.edu/fit5136/fit5136-s1-2024/thursday-2-4-3.git
+If you use HTTPS, it will usually authenticate by asking you to login.
+The HTTPS URL will look like this: https://www.github.com/user_name/repo-name.git
 
-If you use SSH, you will have to put your PC SSH public key and add it to the Gitlab profile(Edit profile>SSH Keys>Add new key) first.
-The SSH URL will look like this: git@git.infotech.monash.edu:fit5136/fit5136-s1-2024/thursday-2-4-3.git
+If you use SSH, you will have to put your PC SSH public key and add it to the gitlab profile(Edit profile>SSH Keys>Add new key) first.
+The SSH URL will look like this: git@github.com:user_name/repo_name.git
 
 Now that you cloned a repository, please change the directory(using cd command) to the repository that you have cloned.
 All of the commands below will not work if you are outside a git repository.
@@ -145,7 +145,7 @@ In some cases, there might be a merge conflict when trying to merge into the mai
 ## Example
 1. clone
 ```
-git clone https://git.infotech.monash.edu/fit5136/fit5136-s1-2024/thursday-2-4-3.git
+git clone https://www.github.com/user_name/repo-name.git
 ```
 
 2. pull
@@ -182,6 +182,10 @@ git diff --staged
 
 ```
 git commit -m "Added AccountManagement"
+```
+
+```
+git commit -m "Updated method addUser in AccountManagement"
 ```
 
 7. skip to 8
