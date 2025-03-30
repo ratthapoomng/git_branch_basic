@@ -164,6 +164,8 @@ git push origin <your_branch_name>
 ```
 *(Example: `git push origin feature-user-login`)*
 
+Note: you can also use `git push origin head` to push the current branch
+
 If the branch doesn't exist on the remote yet, Git might show you a command like `git push --set-upstream origin <your_branch_name>` the first time. You can use that command.
 
 ## 6. Merging: Integrating Your Changes
