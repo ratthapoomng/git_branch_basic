@@ -1,204 +1,255 @@
-### Using GIT
+# Introduction to Using Git and Branching
+
+This guide explains the basic Git commands, focusing on how to use branches effectively.
 
 ## Prerequisite
-Please download and install git on your PC (https://git-scm.com/downloads). If you are not sure, you can google the process according to your OS (MacOS, Windows, Linux).
 
-## git clone
-Clone means cloning the repository from the remote(in this case, Monash Gitlab server) repository into your local machine(your pc).
-The repository in your machine will be called "local repository".
+Before starting, you need to install Git on your computer.
+*   Download Git from the official website: [https://git-scm.com/downloads](https://git-scm.com/downloads)
+*   If you need specific instructions for your operating system (MacOS, Windows, Linux), search online for "install git on [Your OS]".
 
-To clone a repository, in your machine terminal, navigate to the path you want to clone a repository, aka the folder you want to download the repo into,
-then run this command
+## 1. `git clone`: Getting the Repository Locally
 
+Cloning copies a repository from a remote server (like GitHub or a Monash GitLab server) to your local machine. The copy on your machine is called your "local repository".
+
+To clone, open your terminal or command prompt, navigate (`cd`) to the directory where you want to store the project, and run:
+
+```bash
+git clone <repository_url>
 ```
-git clone <insert repository URL here>
+
+**Choosing SSH vs. HTTPS:**
+
+You typically have two URL options for cloning: HTTPS or SSH. You can usually find these URLs on the repository's main page, often under a "Code" or "Clone" button.
+
+*   **HTTPS:** Looks like `https://github.com/user_name/repo-name.git`. Cloning via HTTPS might ask for your username and password or a personal access token for authentication.
+*   **SSH:** Looks like `git@github.com:user_name/repo_name.git`. Using SSH requires you to set up an SSH key pair on your computer and add the *public* key to your profile on the Git hosting service (e.g., GitLab Profile > SSH Keys > Add new key). This allows passwordless authentication.
+
+*   **Note on Monash GitLab:** Monash GitLab often requires or strongly recommends using SSH for authentication. Ensure your SSH key is set up and added to your Monash GitLab profile.
+
+**Important:** After cloning, change your current directory (`cd`) into the newly created repository folder. Most subsequent Git commands must be run from *within* this repository directory.
+
+```bash
+cd <repository_name>
 ```
 
-You usually have two options to do it, via SSH or via HTTPS, either one is fine.
-You can find those two URLs by pressing the code dropdown on the main page or the repository.
-Note: Monash Gitlab only allows you to use SSH, so skip the HTTPS part.
+## 2. `git pull`: Syncing with Remote Changes
 
-If you use HTTPS, it will usually authenticate by asking you to login.
-The HTTPS URL will look like this: https://www.github.com/user_name/repo-name.git
+Pulling fetches updates from the remote repository and merges them into your current local branch. This command keeps your local repository synchronized with the remote version.
 
-If you use SSH, you will have to put your PC SSH public key and add it to the gitlab profile(Edit profile>SSH Keys>Add new key) first.
-The SSH URL will look like this: git@github.com:user_name/repo_name.git
+Use `git pull` when you want to get the latest changes made by others. Cloning downloads a *new* repository, while pulling updates an *existing* one.
 
-Now that you cloned a repository, please change the directory(using cd command) to the repository that you have cloned.
-All of the commands below will not work if you are outside a git repository.
-
-## Pulling
-Pulling means pulling updates from the remote git repository to your local branch unless specified otherwise.
-It is used to sync your local repo with the remote repo. 
-The difference between cloning and pulling is that cloning downloads a new repository while pulling updates the current repository.
-
-The command is as follows:
-```
+```bash
 git pull
 ```
 
-Notice that you don't have to specify the URL at all, because the values needed are already inside a config file in the repository.
-You can access the file by turning on the hidden files in the folder option, then go to .git folder inside the repository and read the config file.
+Git knows where to pull from because the remote repository's URL (usually named `origin`) is stored in the local repository's configuration when you clone. (You can see this in the hidden `.git/config` file, but be careful editing it directly).
 
-## Pushing
-Pushing means pushing the committed updates from our local branch to the remote repository, which is basically the reverse of pulling. 
-Most of the time, the remote repository is referred to as "origin" in the git system. 
+## 3. Branching: Working in Isolation
 
-The command is as follows:
-```
-git push <remote> <branch name>
-```
+### What is a Branch?
 
-In this case, we can substitute remote with origin. In the future, there might be other remote names, but for now, we can stick with origin.
+Most repositories have a default branch, often named `main` or `master`, which usually holds the stable or production-ready code.
 
+If multiple people make changes directly on the `main` branch simultaneously, it can lead to conflicts and instability. **Branching** solves this by allowing you to work on features or fixes in isolation.
 
-## Branching
-Now you should start asking "How about 'branch'? What is it?".
-In most of the repositories, there will be either a main or master branch, which is the branch that contains the working code.
-However, if many people work on the same branch at the same time, it could create conflict when pushing the code to the remote repository.
-To prevent that, we will do something called "branching".
-Branching basically means creating a snapshot of the current(or main) branch into your new branch, and then you can start working on your new branch without affecting the current(or main) branch.
+Creating a branch essentially creates a separate line of development based on a snapshot of another branch (like `main`). You can make changes on your new branch without affecting `main` until you're ready to merge.
 
-You can create a new branch using this command
-```
-git branch <new branch name>
-```
+### `git branch`: Managing Branches
 
-You can also see the current branch you are on using this command
-```
-git branch
-```
+*   **Create a new branch:**
 
+    ```bash
+    git branch <new_branch_name>
+    ```
+    *(Example: `git branch feature-user-login`)*
 
-## Changing branch
-The next one after creating a branch is changing your current branch. You can do this using the following command
-```
-git checkout <branch name>
-```
+*   **List all local branches:**
 
-## Adding changes
-Now that you are in a new branch, let's say you write some new code and you want to save the changes to git.
-You can do this by calling the following command:
-```
-git add <path to file>
-```
-This will add the file into git staging area, which then will be committed(saved) to git system later.
+    ```bash
+    git branch
+    ```
+    *(The current branch you are on will be marked with an asterisk `*`)*
 
-You can also add all the files at the same time using the following command:
-```
-git add .
-```
-The "." in this case refers to the current directory, which means git will add every file and folder inside this directory to the staging area.
-However, you need to be cautious because it can also add unnecessary files or sensitive files.
+### `git checkout`: Switching Branches
 
+Creating a branch doesn't automatically switch to it. Use `checkout` to change your active working branch:
 
-## Checking staging area
-Now if you have added all the files, you can check the difference between the last commit and the staging area by using the following command
+```bash
+git checkout <branch_name>
 ```
-git diff --staged
-```
-This will show you which part of the files will be added or removed when committing(saving) the changes to git.
+*(Example: `git checkout feature-user-login`)*
 
-## Resetting changes
-If you added a wrong file, you can use the following command to reset it back:
-```
-git reset <path to file>
-```
+*   **Shortcut:** You can create and switch to a new branch in one command:
 
-you can also reset all the added changes using the following command:
-```
-git reset
-```
+    ```bash
+    git checkout -b <new_branch_name>
+    ```
+    *(Example: `git checkout -b fix-navbar-bug`)*
 
-Please note that the reset does not change the content inside the file unless specified via option.
+## 4. Making Changes: Add, Commit
 
-## Committing changes
-Once you checked, you can commit the changes in the staging area to the git system using the following command
-```
-git commit -m '<insert your message here>'
-```
-You should always use a useful commit message, basically what you did between the last commit and this commit. 
+Once you are on your new branch, you can start making changes to the code. The typical workflow is: Modify files -> Stage changes -> Commit changes.
 
-## Merging
-Once you finished experimenting and testing your code, and also done committing all the changes, you can push your branch to the remote repository and then merge back to the main branch.
-In order to merge your branch to the main branch(or any other branch), you will have to create a merge request (or pull request if you are using Github), which can easily be done in the GitLab UI. Then you can merge your branch into the main branch. In most cases, depending on the company or team, you will have to find someone else to approve your merge request before being able to merge into the main branch. This is usually considered best practice for merge request.
+### `git add`: Staging Changes
 
-## Merge conflict
-In some cases, there might be a merge conflict when trying to merge into the main branch. This happens when multiple branches working on the same region of the same file are subsequently merged, which creates a conflict on which change should the git system keeps. This is why git pull should be called every time you want to create a new branch, to mitigate this issue. When having a conflict, the easiest way would be solving it with UI tools (Most online git repository hosting services like Gitlab and Github have this built-in already). 
+Before you can permanently save ("commit") your changes, you need to tell Git which modified or new files you want to include in the next snapshot. This process is called **staging**.
 
-## Quick Summary
-1. clone
-2. pull
-3. create a new branch
-4. switch to the new branch
-5. write/change code + test
-6. commit
-7. repeat from 5 if needed, else go to 8
-8. push your branch
-9. create a merge request
-10. wait for approval
-11. merge
-12. switch back to the main branch
-13. restart from 2
+*   **Stage a specific file:**
 
+    ```bash
+    git add <path/to/your/file>
+    ```
+    *(Example: `git add src/user.py`)*
 
-## Example
-1. clone
-```
-git clone https://www.github.com/user_name/repo-name.git
-```
+*   **Stage all changes in the current directory and subdirectories:**
 
-2. pull
-```
-git pull
-```
+    ```bash
+    git add .
+    ```
+    *(The `.` represents the current directory.)*
 
-3. create a new branch
-```
-git branch feature-1-login
-```
+    **Caution:** Be careful with `git add .`. It stages *all* modified and new untracked files. This might include temporary files, build artifacts, or sensitive data you don't want in the repository. Consider using a `.gitignore` file to tell Git which files/patterns to ignore permanently.
 
-4.1 Switch the new branch
-```
-git checkout feature-1-login
-```
+### `git diff --staged`: Reviewing Staged Changes
 
-4.2 Check if the current branch is correct
-```
-git branch
-```
+Before committing, it's good practice to review exactly what changes you have staged:
 
-5. write/change code + test
-6. commit
-add file to the staging area
-```
-git add AccountManagement.java
-```
-
-check the diff
-```
+```bash
 git diff --staged
 ```
 
-```
-git commit -m "Added AccountManagement"
+This command shows the differences between your last commit and what's currently in the staging area.
+
+### `git reset`: Unstaging Changes
+
+If you staged a file by mistake:
+
+*   **Unstage a specific file:**
+
+    ```bash
+    git reset <path/to/your/file>
+    ```
+
+*   **Unstage all currently staged changes:**
+
+    ```bash
+    git reset
+    ```
+
+**Important:** By default, `git reset` only removes changes from the staging area. It *does not* discard the modifications in your actual files (your working directory).
+
+### `git commit`: Saving Changes
+
+Committing takes the changes currently in the staging area and saves them permanently to the repository's history on your current branch.
+
+```bash
+git commit -m "Your descriptive commit message"
 ```
 
-```
-git commit -m "Updated method addUser in AccountManagement"
+*   **Commit Messages:** Always write clear, concise messages explaining the *purpose* of the change (e.g., "Fix login validation bug #123", "Implement user profile page"). Good messages are crucial for understanding the project's history.
+
+## 5. `git push`: Sharing Your Branch
+
+After committing your changes locally on your feature branch, you need to push the branch (and its commits) to the remote repository (e.g., GitLab/GitHub) so others can see it or so you can create a merge request.
+
+```bash
+git push <remote_name> <branch_name>
 ```
 
-7. skip to 8
-8. push to remote repo
-```
-git push origin feature-1-login
-```
+Typically, the remote name is `origin`:
 
-9-11. create merge request and merge (on Gitlab UI)
-
-12. switch back to the main branch
+```bash
+git push origin <your_branch_name>
 ```
+*(Example: `git push origin feature-user-login`)*
+
+If the branch doesn't exist on the remote yet, Git might show you a command like `git push --set-upstream origin <your_branch_name>` the first time. You can use that command.
+
+## 6. Merging: Integrating Your Changes
+
+Once your work on the branch is complete, tested, and pushed, you'll want to merge it back into the `main` (or another target) branch.
+
+This is usually done via a **Merge Request** (GitLab terminology) or **Pull Request** (GitHub terminology).
+
+*   Go to the GitLab/GitHub web interface for your repository.
+*   You'll often see a prompt to create a Merge/Pull Request for your recently pushed branch.
+*   Create the request, describing your changes.
+*   Depending on the project's workflow, your request might need review and approval from teammates before it can be merged. This is a common best practice.
+*   Once approved (if required), the changes can be merged via the web interface.
+
+## 7. Merge Conflicts
+
+Sometimes, when you try to merge, Git encounters a **merge conflict**. This happens if changes were made to the *same lines* in the *same file(s)* on both your branch and the target branch (e.g., `main`) since you created your branch. Git doesn't know which version to keep.
+
+*   **Prevention:** Regularly pull changes from `main` into your feature branch (`git pull origin main` while on your feature branch) to integrate upstream changes often and resolve smaller conflicts sooner.
+*   **Resolution:** Merge conflicts must be resolved manually.
+    *   GitLab/GitHub often provide web-based tools to help resolve them during the Merge/Pull Request.
+    *   Alternatively, pull the target branch, attempt the merge locally (`git merge main` while on your feature branch), and Git will mark the conflicting sections in the affected files. You then edit the files to fix the conflicts, `git add` the resolved files, and `git commit` to finalize the merge.
+
+## Quick Workflow Summary
+
+1.  `git clone <url>` (Only the first time)
+2.  `git pull` (Start on `main`, make sure it's up-to-date)
+3.  `git checkout -b <new_branch_name>` (Create and switch to a new branch)
+4.  *Work:* Write/change code, test your changes.
+5.  `git add <files>` or `git add .` (Stage your changes)
+6.  `git commit -m "Message"` (Commit your staged changes)
+7.  *Repeat steps 4-6 as needed.*
+8.  `git push origin <new_branch_name>` (Push your branch to the remote)
+9.  *Go to GitLab/GitHub:* Create a Merge Request / Pull Request.
+10. *Wait for review/approval* (If applicable).
+11. *Merge the request* (Usually via the web UI).
+12. `git checkout main` (Switch back to the main branch locally)
+13. `git pull` (Update your local `main` branch with the newly merged changes)
+14. *Repeat from step 3 for the next task.*
+
+## Example Scenario
+
+```bash
+# 1. Clone (if you haven't already)
+# git clone git@gitlab.com:your-group/your-project.git
+# cd your-project
+
+# 2. Ensure main is up-to-date
 git checkout main
-```
+git pull origin main
 
-13. repeat 2.
+# 3. Create and switch to a new branch
+git checkout -b feature-add-user-api
+
+# 4. Work: Create/edit files (e.g., api.py, models.py)
+#    ... write code ...
+#    ... test code ...
+
+# 5. Stage the changes
+git add src/api.py src/models.py
+
+# (Optional: Check what's staged)
+# git diff --staged
+
+# 6. Commit the changes
+git commit -m "Implement initial User API endpoint"
+
+# 4-6. More work, staging, and committing
+#    ... more code changes ...
+#    ... test again ...
+git add src/api.py
+git commit -m "Add input validation to User API"
+
+# 8. Push the branch to the remote
+git push origin feature-add-user-api
+
+# 9-11. Go to GitLab/GitHub UI
+#       - Create Merge Request for 'feature-add-user-api' into 'main'
+#       - Wait for approval (if needed)
+#       - Merge the request
+
+# 12. Switch back to main locally
+git checkout main
+
+# 13. Pull the merged changes into your local main
+git pull origin main
+
+# Ready for the next task (go back to step 3)
+```
